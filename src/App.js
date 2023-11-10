@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { fabric } from "fabric";
 import WaveSurfer from "wavesurfer.js";
@@ -6,7 +5,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 function App() {
   const [videoSrc, setVideoSrc] = useState("");
-  // const videoSrc = 'https://ik.imagekit.io/uonadbo34e6/videos/video_m2R2IZG8B.mp4';
 
   const [fab_Video_State, setFab_Video_State] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -18,28 +16,14 @@ function App() {
   const [videoMetadata, setVideoMetadata] = useState({ duration: 0 });
 
   useEffect(() => {
-    var url_mp4 =
-      "https://ik.imagekit.io/uonadbo34e6/videos/video_m2R2IZG8B.mp4";
-
     wavesurferRef.current = WaveSurfer.create({
       container: "#waveform",
-      waveColor: "violet",
-      progressColor: "purple",
+      waveColor: "grey",
+      progressColor: "black",
       backend: "MediaElement",
     });
 
-    wavesurferRef.current.on("seek", (progress) => {
-      if (videoRef.current) {
-        const newTime = videoRef.current.duration * progress;
-        videoRef.current.currentTime = newTime;
-      }
-    });
-
     return () => {
-      //   if (videoRef.current) {
-      //     URL.revokeObjectURL(videoRef.current.src);
-      //     videoRef.current = null;
-      //   }
       if (wavesurferRef.current) {
         wavesurferRef.current.destroy();
       }
@@ -105,13 +89,13 @@ function App() {
     const file = event.target.files[0];
     const videoUrl = URL.createObjectURL(file);
     // console.log('video loaded', canvasRef.current);
-    console.log("video changed videoURL", videoUrl);
+    // console.log("video changed videoURL", videoUrl);
     setVideoSrc(videoUrl);
   };
 
   const handleVideoLoaded = (event) => {
     const canvas = new fabric.Canvas("canvas", {
-      height: 400,
+      height: 500,
       width: 900,
       backgroundColor: "black",
     });
@@ -128,8 +112,6 @@ function App() {
     videoE.muted = true;
     videoE.crossOrigin = "anonymous";
     videoE.src = videoSrc;
-
-    console.log("videoE ", videoE);
 
     var fab_video = new fabric.Image(videoE, { left: 0, top: 0 });
     fab_video.set({ selectable: true, movable: true });
@@ -179,7 +161,20 @@ function App() {
           alignItems: "center",
         }}
       >
-        <input type="file" accept="video/*" onChange={handleVideoChange} />
+        <input
+          style={{
+            backgroundColor: "black",
+            color: "white",
+            fontSize: "15px",
+            padding: "10px 60px",
+            borderRadius: "20px",
+            margin: "10px",
+            cursor: "pointer",
+          }}
+          type="file"
+          accept="video/*"
+          onChange={handleVideoChange}
+        />
         {
           <video
             ref={videoRef}
@@ -190,9 +185,21 @@ function App() {
             onLoadedMetadata={handleVideoLoaded}
           />
         }
-        {/* <video src="https://ik.imagekit.io/uonadbo34e6/videos/video_m2R2IZG8B.mp4" hidden={true} autoPlay={true} muted={true} id='vid1' className='vid1'></video> */}
         <canvas ref={canvasRef} id="canvas" width="640" height="360"></canvas>
-        <button onClick={handlePlayPause}>Play/Pause</button>
+        <button
+          style={{
+            backgroundColor: "black",
+            color: "white",
+            fontSize: "20px",
+            padding: "10px 60px",
+            borderRadius: "20px",
+            margin: "10px",
+            cursor: "pointer",
+          }}
+          onClick={handlePlayPause}
+        >
+          Play / Pause
+        </button>
         <div
           style={{
             width: "100%",
